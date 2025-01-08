@@ -1,21 +1,16 @@
-// Initialisiere den QR-Code-Scanner
-const qrCodeReader = new Html5Qrcode("reader");
+function onScanSuccess(decodedText, decodedResult) {
+  // handle the scanned code as you like, for example:
+  console.log(`Code matched = ${decodedText}`, decodedResult);
+}
 
-// Starte den Scanner
-qrCodeReader.start(
-    { facingMode: "environment" }, // Kamera auf der Rückseite
-    {
-        fps: 10,                   // Frames pro Sekunde
-        qrbox: { width: 250, height: 250 }, // Größe des Scanfeldes
-    },
-    (decodedText) => {
-        // Wenn ein QR-Code erkannt wird
-        document.getElementById("output").innerText = `QR Code Inhalt: ${decodedText}`;
-    },
-    (errorMessage) => {
-        // Fehlerbehandlung (optional)
-        console.error(errorMessage);
-    }
-).catch((err) => {
-    console.error("Kamera konnte nicht gestartet werden:", err);
-});
+function onScanFailure(error) {
+  // handle scan failure, usually better to ignore and keep scanning.
+  // for example:
+  console.warn(`Code scan error = ${error}`);
+}
+
+let html5QrcodeScanner = new Html5QrcodeScanner(
+  "reader",
+  { fps: 10, qrbox: {width: 250, height: 250} },
+  /* verbose= */ false);
+html5QrcodeScanner.render(onScanSuccess, onScanFailure);
